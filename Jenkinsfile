@@ -52,7 +52,7 @@ pipeline {
                             -Dsonar.projectKey=web-jenkins-project \
                             -Dsonar.projectName=web-jenkins-project \
                             -Dsonar.sources=src \
-                            -Dsonar.host.url=http://172.31.12.135:9000
+                            -Dsonar.host.url=http://65.2.35.75:9000/
                     '''
                 }
             }

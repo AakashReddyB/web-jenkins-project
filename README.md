@@ -319,17 +319,11 @@ docker run -d --name web-app -p 80:80 web-jenkins-app
 
 output:
 
-```<img width="1920" height="1080" alt="Screenshot (1497)" src="https://github.com/user-attachments/assets/03c49493-3b4b-4b50-94e7-687cfc77d37d" />
-
-<img width="1920" height="1080" alt="Screenshot (1495)" src="https://github.com/user-attachments/assets/7b0038f0-5d13-4cde-b022-dfcc9c3de9df" />
-
-<img width="1920" height="1080" alt="Screenshot (1498)" src="https://github.com/user-attachments/assets/daa9600f-cdaa-4960-b085-7c99c5d77a67" />
-
-
-<img width="1920" height="1080" alt="Screenshot (1499)" src="https://github.com/user-attachments/assets/5cc0c6c1-7487-4d4d-aca5-0b441481f736" />
-
-<img width="1920" height="1080" alt="Screenshot (1496)" src="https://github.com/user-attachments/assets/84d0faa7-5bab-4629-8333-a1aafaf0369c" />
-
+https://github.com/user-attachments/assets/03c49493-3b4b-4b50-9...
+https://github.com/user-attachments/assets/7b0038f0-5d13-4cde-b022...
+https://github.com/user-attachments/assets/daa9600f-cdaa-4960-b085...
+https://github.com/user-attachments/assets/5cc0c6c1-7487-4d4d-aca5...
+https://github.com/user-attachments/assets/84d0faa7-5bab-4629-8333...
 
 
 

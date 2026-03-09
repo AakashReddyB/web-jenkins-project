@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     environment {
-        APP_NAME    = 'my-web-app'
-        DEPLOY_DIR  = '/var/www/html'   // Change to your web server path
+        APP_NAME   = 'my-web-app'
+        IMAGE_NAME = 'web-jenkins-app'
+        CONTAINER_NAME = 'web-jenkins-container'
     }
 
     stages {
@@ -21,7 +22,6 @@ pipeline {
                 sh '''
                     if command -v tidy > /dev/null 2>&1; then
                         tidy -errors -quiet -utf8 src/index.html || true
-                        echo "Lint complete."
                     else
                         echo "tidy not installed — skipping lint."
                     fi
@@ -33,45 +33,40 @@ pipeline {
             steps {
                 echo '🧪 Running tests...'
                 sh '''
-                    echo "Checking required files exist..."
                     test -f src/index.html && echo "✅ index.html found"
                     test -f src/style.css  && echo "✅ style.css found"
                     test -f src/app.js     && echo "✅ app.js found"
-                    echo "All checks passed."
+                    test -f Dockerfile     && echo "✅ Dockerfile found"
                 '''
             }
         }
 
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                echo '🔨 Building project...'
+                echo '🐳 Building Docker image...'
                 sh '''
-                    mkdir -p build
-                    cp -r src/* build/
-                    echo "Build timestamp: $(date)" >> build/build-info.txt
-                    echo "Build complete."
+                    docker build -t ${IMAGE_NAME}:latest .
+                    echo "✅ Docker image built!"
                 '''
             }
         }
 
-        stage('Archive') {
+        stage('Deploy with Nginx') {
             steps {
-                echo '📦 Archiving build artifacts...'
-                archiveArtifacts artifacts: 'build/**', fingerprint: true
-            }
-        }
-
-        stage('Deploy') {
-            when {
-                branch 'main'   // Only deploy from main branch
-            }
-            steps {
-                echo '🚀 Deploying to web server...'
+                echo '🌐 Deploying container...'
                 sh '''
-                    echo "Deploying to ${DEPLOY_DIR}..."
-                    # Uncomment the line below to actually deploy:
-                    # cp -r build/* ${DEPLOY_DIR}/
-                    echo "✅ Deployment complete!"
+                    # Stop and remove old container if it exists
+                    docker stop ${CONTAINER_NAME} || true
+                    docker rm   ${CONTAINER_NAME} || true
+
+                    # Run the new container
+                    docker run -d \
+                        --name ${CONTAINER_NAME} \
+                        -p 80:80 \
+                        --restart always \
+                        ${IMAGE_NAME}:latest
+
+                    echo "✅ App is live!"
                 '''
             }
         }
@@ -79,7 +74,7 @@ pipeline {
 
     post {
         success {
-            echo '🎉 Pipeline completed successfully!'
+            echo '🎉 Pipeline complete! App is live at http://YOUR-EC2-IP'
         }
         failure {
             echo '❌ Pipeline failed. Check the logs above.'

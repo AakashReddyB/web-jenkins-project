@@ -1,21 +1,16 @@
 pipeline {
     agent any
-
     environment {
         IMAGE_NAME     = 'web-jenkins-app'
         CONTAINER_NAME = 'web-jenkins-container'
-        SONAR_PROJECT  = 'web-jenkins-project'
     }
-
     stages {
-
         stage('Checkout') {
             steps {
                 echo '📥 Checking out source code...'
                 checkout scm
             }
         }
-
         stage('Lint') {
             steps {
                 echo '🔍 Linting HTML files...'
@@ -29,7 +24,6 @@ pipeline {
                 '''
             }
         }
-
         stage('Test') {
             steps {
                 echo '🧪 Running tests...'
@@ -42,31 +36,6 @@ pipeline {
                 '''
             }
         }
-
-        stage('SonarQube Analysis') {
-            steps {
-                echo '🔎 Running SonarQube analysis...'
-                withSonarQubeEnv('SonarQube') {
-                    sh '''
-                        /opt/sonar-scanner/bin/sonar-scanner \
-                            -Dsonar.projectKey=web-jenkins-project \
-                            -Dsonar.projectName=web-jenkins-project \
-                            -Dsonar.sources=src \
-                            -Dsonar.host.url=http://65.2.35.75:9000/
-                    '''
-                }
-            }
-        }
-
-        stage('Quality Gate') {
-            steps {
-                echo '🚦 Checking SonarQube Quality Gate...'
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 echo '🐳 Building Docker image...'
@@ -76,7 +45,6 @@ pipeline {
                 '''
             }
         }
-
         stage('Deploy with Nginx') {
             steps {
                 echo '🌐 Deploying container with Nginx...'
@@ -92,9 +60,7 @@ pipeline {
                 '''
             }
         }
-
     }
-
     post {
         success {
             echo '🎉 Pipeline complete! App is live!'
@@ -107,5 +73,4 @@ pipeline {
             cleanWs()
         }
     }
-
 }

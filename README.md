@@ -320,6 +320,8 @@ output:
 
 <img width="1920" height="1080" alt="Screenshot (1497)" src="https://github.com/user-attachments/assets/c688722f-9602-4efe-8fb6-588331668847" />
 
+<img width="1920" height="1080" alt="Screenshot (1498)" src="https://github.com/user-attachments/assets/ab39f534-6ddf-446a-8e5f-62a322343626" />
+
 
 ## 👨‍💻 Author
 

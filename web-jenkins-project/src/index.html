@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Web App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <nav>
+      <span class="logo">⚙️ MyApp</span>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Welcome to MyApp</h1>
+      <p>Deployed automatically via Jenkins CI/CD Pipeline</p>
+      <button onclick="showMessage()">Click Me</button>
+    </section>
+
+    <section class="cards">
+      <div class="card">
+        <h3>🚀 Fast</h3>
+        <p>Optimized for performance and speed.</p>
+      </div>
+      <div class="card">
+        <h3>🔒 Secure</h3>
+        <p>Built with security best practices.</p>
+      </div>
+      <div class="card">
+        <h3>🔄 CI/CD</h3>
+        <p>Continuous delivery via Jenkins pipeline.</p>
+      </div>
+    </section>
+
+    <p id="message" class="message hidden"></p>
+  </main>
+
+  <footer>
+    <p>© 2026 MyApp — Built &amp; Deployed with Jenkins</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

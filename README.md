@@ -318,6 +318,8 @@ output:
 
 
 
+<img width="1920" height="1080" alt="Screenshot (1497)" src="https://github.com/user-attachments/assets/c688722f-9602-4efe-8fb6-588331668847" />
+
 
 ## 👨‍💻 Author
 

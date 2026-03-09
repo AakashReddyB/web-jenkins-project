@@ -319,8 +319,8 @@ docker run -d --name web-app -p 80:80 web-jenkins-app
 
 output:
 
+<img width="1920" height="1080" alt="Screenshot (1499)" src="https://github.com/user-attachments/assets/32c7f4c6-792c-4eef-ae55-eff4d693c3df" />
 
-<img width="1920" height="1080" alt="Screenshot (1498)" src="https://github.com/user-attachments/assets/fd14c44d-1d2b-4b42-8ae1-3098963cac6a" />
 
 
 

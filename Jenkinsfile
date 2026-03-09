@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        APP_NAME   = 'my-web-app'
-        IMAGE_NAME = 'web-jenkins-app'
+        IMAGE_NAME     = 'web-jenkins-app'
         CONTAINER_NAME = 'web-jenkins-container'
+        SONAR_PROJECT  = 'web-jenkins-project'
     }
 
     stages {
@@ -23,7 +23,7 @@ pipeline {
                     if command -v tidy > /dev/null 2>&1; then
                         tidy -errors -quiet -utf8 src/index.html || true
                     else
-                        echo "tidy not installed — skipping lint."
+                        echo "tidy not installed — skipping."
                     fi
                 '''
             }
@@ -41,6 +41,30 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                echo '🔎 Running SonarQube analysis...'
+                withSonarQubeEnv('SonarQube') {
+                    sh '''
+                        sonar-scanner \
+                          -Dsonar.projectKey=web-jenkins-project \
+                          -Dsonar.projectName=web-jenkins-project \
+                          -Dsonar.sources=src \
+                          -Dsonar.host.url=http://172.31.12.135:9000
+                    '''
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                echo '🚦 Checking Quality Gate...'
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 echo '🐳 Building Docker image...'
@@ -55,17 +79,13 @@ pipeline {
             steps {
                 echo '🌐 Deploying container...'
                 sh '''
-                    # Stop and remove old container if it exists
                     docker stop ${CONTAINER_NAME} || true
                     docker rm   ${CONTAINER_NAME} || true
-
-                    # Run the new container
                     docker run -d \
                         --name ${CONTAINER_NAME} \
                         -p 80:80 \
                         --restart always \
                         ${IMAGE_NAME}:latest
-
                     echo "✅ App is live!"
                 '''
             }
@@ -74,13 +94,12 @@ pipeline {
 
     post {
         success {
-            echo '🎉 Pipeline complete! App is live at http://YOUR-EC2-IP'
+            echo '🎉 Pipeline complete! App is live!'
         }
         failure {
-            echo '❌ Pipeline failed. Check the logs above.'
+            echo '❌ Pipeline failed. Check logs.'
         }
         always {
-            echo '🧹 Cleaning up workspace...'
             cleanWs()
         }
     }

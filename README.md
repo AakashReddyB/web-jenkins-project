@@ -4,7 +4,6 @@ A production-style DevOps project with a fully automated CI/CD pipeline using **
 
 > 🌐 **Live App:** http://65.2.35.75 &nbsp;|&nbsp; 🔧 **Jenkins:** http://65.2.35.75:8080 &nbsp;|&nbsp; 🔍 **SonarQube:** http://172.31.12.135:9000
 
----
 
 ## 🏗️ Architecture
 
@@ -315,17 +314,10 @@ docker build -t web-jenkins-app .
 docker run -d --name web-app -p 80:80 web-jenkins-app
 
 # Open → http://localhost
-
-
 output:
 
-<img width=1920 height=1080 alt=Screenshot(1499) src=https://github.com/user-attachments/assets/32c7f4c6-792c-4eef-ae55-eff4d693c3df />
 
 
-
-
-
----
 
 ## 👨‍💻 Author
 

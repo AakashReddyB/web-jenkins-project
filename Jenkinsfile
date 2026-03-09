@@ -22,6 +22,7 @@ pipeline {
                 sh '''
                     if command -v tidy > /dev/null 2>&1; then
                         tidy -errors -quiet -utf8 src/index.html || true
+                        echo "Lint complete."
                     else
                         echo "tidy not installed — skipping."
                     fi
@@ -37,6 +38,7 @@ pipeline {
                     test -f src/style.css  && echo "✅ style.css found"
                     test -f src/app.js     && echo "✅ app.js found"
                     test -f Dockerfile     && echo "✅ Dockerfile found"
+                    echo "All checks passed."
                 '''
             }
         }
@@ -46,11 +48,11 @@ pipeline {
                 echo '🔎 Running SonarQube analysis...'
                 withSonarQubeEnv('SonarQube') {
                     sh '''
-                        sonar-scanner \
-                          -Dsonar.projectKey=web-jenkins-project \
-                          -Dsonar.projectName=web-jenkins-project \
-                          -Dsonar.sources=src \
-                          -Dsonar.host.url=http://172.31.12.135:9000
+                        /opt/sonar-scanner/bin/sonar-scanner \
+                            -Dsonar.projectKey=web-jenkins-project \
+                            -Dsonar.projectName=web-jenkins-project \
+                            -Dsonar.sources=src \
+                            -Dsonar.host.url=http://172.31.12.135:9000
                     '''
                 }
             }
@@ -58,7 +60,7 @@ pipeline {
 
         stage('Quality Gate') {
             steps {
-                echo '🚦 Checking Quality Gate...'
+                echo '🚦 Checking SonarQube Quality Gate...'
                 timeout(time: 2, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
@@ -70,19 +72,19 @@ pipeline {
                 echo '🐳 Building Docker image...'
                 sh '''
                     docker build -t ${IMAGE_NAME}:latest .
-                    echo "✅ Docker image built!"
+                    echo "✅ Docker image built successfully!"
                 '''
             }
         }
 
         stage('Deploy with Nginx') {
             steps {
-                echo '🌐 Deploying container...'
+                echo '🌐 Deploying container with Nginx...'
                 sh '''
                     docker stop ${CONTAINER_NAME} || true
                     docker rm   ${CONTAINER_NAME} || true
                     docker run -d \
-                        --name ${CONTAINER_NAME} \
+                        --name  ${CONTAINER_NAME} \
                         -p 80:80 \
                         --restart always \
                         ${IMAGE_NAME}:latest
@@ -90,6 +92,7 @@ pipeline {
                 '''
             }
         }
+
     }
 
     post {
@@ -97,10 +100,12 @@ pipeline {
             echo '🎉 Pipeline complete! App is live!'
         }
         failure {
-            echo '❌ Pipeline failed. Check logs.'
+            echo '❌ Pipeline failed. Check the logs above.'
         }
         always {
+            echo '🧹 Cleaning up workspace...'
             cleanWs()
         }
     }
+
 }
